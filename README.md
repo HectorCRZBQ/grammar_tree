@@ -3,8 +3,11 @@
 Este proyecto muestra una representación gráfica de un árbol sintáctico generado a partir de expresiones matemáticas utilizando Tkinter y Lark.
 
 ## Descripción / Description
- (ESP)La aplicación permite ingresar expresiones matemáticas simples y visualizar su árbol sintáctico utilizando nodos y conexiones en una interfaz gráfica.
- (ENG)The application allows users to input simple mathematical expressions and visualize their syntax tree using nodes and connections in a graphical interface.
+(ESP)
+La aplicación permite ingresar expresiones matemáticas simples y visualizar su árbol sintáctico utilizando nodos y conexiones en una interfaz gráfica.
+
+(ENG)
+The application allows users to input simple mathematical expressions and visualize their syntax tree using nodes and connections in a graphical interface.
 
 ## Cómo usar / How to use
 (ESP)
