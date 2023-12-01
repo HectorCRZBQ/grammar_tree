@@ -22,5 +22,7 @@ The application allows users to input simple mathematical expressions and visual
 3. Run the script tree_visualizer.py.
 4. Input a mathematical expression in the window and click "Display Tree" to visualize the syntax tree.
 
-## Ejemplo / Example
+## Ejemplo v1 / Example v1
 ![Test_1](Test_1.png)
+## Ejemplo v2 / Example v2
+![Test_2](Test_2.png)
