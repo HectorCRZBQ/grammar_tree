@@ -8,6 +8,8 @@ GRAMMAR = '''
         | expr "-" expr  -> sub
         | expr "*" expr  -> mul
         | expr "/" expr  -> div
+        | expr "^" expr  -> pow
+        | expr "%" expr  -> mod
         | "(" expr ")"
     NUMBER: /\d+(\.\d+)?/
     %import common.WS
@@ -91,7 +93,7 @@ def calculate_tree_size(node, x_spacing, y_spacing):
 
 def draw_tree(node, canvas, x, y, x_spacing, y_spacing, level=0, level_offset=0):
     text_size = 12
-    node_radius = 25
+    node_radius = 41
     node_color = "lightblue"
     text_color = "black"
 
@@ -132,17 +134,18 @@ def clear_tree():
 root = tk.Tk()
 root.title("Visualizador de Árbol Sintáctico")
 root.geometry("800x600")  # Ajustar tamaño de la ventana principal
+root.configure(bg="#f0f0f0")  # Color de fondo
 
-label = tk.Label(root, text="Ingresa una expresión matemática:")
+label = tk.Label(root, text="Ingresa una expresión matemática:", font=("Arial", 14), bg="#f0f0f0")
 label.pack()
 
-entry = tk.Entry(root)
+entry = tk.Entry(root, font=("Arial", 12))
 entry.pack()
 
-button_show = tk.Button(root, text="Mostrar Árbol", command=display_tree)
+button_show = tk.Button(root, text="Mostrar Árbol", command=display_tree, font=("Arial", 12), bg="#4CAF50", fg="white")
 button_show.pack()
 
-button_clear = tk.Button(root, text="Borrar Árbol", command=clear_tree)
+button_clear = tk.Button(root, text="Borrar Árbol", command=clear_tree, font=("Arial", 12), bg="#f44336", fg="white")
 button_clear.pack()
 
 canvas = tk.Canvas(root, bg="white")
