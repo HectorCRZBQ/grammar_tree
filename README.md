@@ -26,3 +26,5 @@ The application allows users to input simple mathematical expressions and visual
 ![Test_1](Test_1.png)
 ## Ejemplo v2 / Example v2
 ![Test_2](Test_2.png)
+## Ejemplo v2 / Example v2
+![Test_3](Test_3.png)
