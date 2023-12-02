@@ -28,6 +28,26 @@ def build_ast(expression):
     except Exception as e:
         raise ValueError(f"Error al analizar la expresión: {e}")
 
+def calculate_horizontal_positions(node, x_spacing):
+    if not node.children:
+        return [0], 0
+
+    child_positions = []
+    subtree_sizes = []
+    for child in node.children:
+        child_positions_child, subtree_size = calculate_horizontal_positions(child, x_spacing)
+        child_positions.extend(child_positions_child)
+        subtree_sizes.append(subtree_size)
+
+    max_subtree_size = max(subtree_sizes)
+    position = 0
+    child_positions_result = []
+    for size in subtree_sizes:
+        position += max_subtree_size + x_spacing
+        child_positions_result.append(position - size // 2)
+
+    return child_positions_result, max(position - x_spacing, max_subtree_size + x_spacing)
+
 def build_tree(tree, parent_node):
     if isinstance(tree, tuple):
         root = str(tree[0])
@@ -59,50 +79,34 @@ def build_tree(tree, parent_node):
 
 def calculate_tree_size(node, x_spacing, y_spacing):
     if not node.children:
-        return 1, 1  # Nodo hoja, retorna un tamaño mínimo
+        return 1, 1
 
     width = sum(calculate_tree_size(child, x_spacing, y_spacing)[0] for child in node.children)
     height = max(calculate_tree_size(child, x_spacing, y_spacing)[1] for child in node.children) + 1
 
+    if node.data_type == 'Operation':
+        height *= 5
+
     return width, height
 
-
-def draw_tree(node, canvas, x, y, x_spacing, y_spacing, level=0):
+def draw_tree(node, canvas, x, y, x_spacing, y_spacing, level=0, level_offset=0):
     text_size = 12
-    node_radius = 20  # Radio del nodo
+    node_radius = 25
+    node_color = "lightblue"
+    text_color = "black"
 
-    # Dibuja el nodo actual
-    canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill="white", outline="black")
-    canvas.create_text(x, y, text=f"{node.value}\n({node.data_type})", justify='center', font=("Arial", text_size))
+    canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill=node_color, outline="black")
+    canvas.create_text(x, y, text=f"{node.value}\n({node.data_type})", justify='center', font=("Arial", text_size), fill=text_color)
 
     children_count = len(node.children)
     if children_count > 0:
-        # Calcula el ancho total ocupado por los nodos hijos
-        total_width = sum(calculate_tree_size(child, x_spacing, y_spacing)[0] for child in node.children) + (children_count - 1) * x_spacing
+        child_positions, _ = calculate_horizontal_positions(node, x_spacing)
+        child_positions = [(pos - child_positions[0]) + x for pos in child_positions]
 
-        # Ajusta las posiciones iniciales de los nodos hijos
-        start_x = x - total_width // 2
-
-        # Lista para almacenar las posiciones de los nodos hijos
-        children_positions = []
-
-        # Calcula las posiciones de los nodos hijos
-        for child in node.children:
-            child_width = calculate_tree_size(child, x_spacing, y_spacing)[0]
-            children_positions.append(start_x + child_width // 2)
-            start_x += child_width + x_spacing
-
-        # Calcula la separación entre los nodos hijos
-        spacing = max(node_radius * 6, total_width // (children_count + 1))
-
-        # Dibuja las líneas y los nodos hijos
-        for child_x, child_node in zip(children_positions, node.children):
-            child_y = y + y_spacing  # Establece una separación vertical entre niveles
-            canvas.create_line(x, y + node_radius, child_x, child_y - node_radius, fill="black")
-
-            # Dibuja el nodo hijo en su posición calculada
-            draw_tree(child_node, canvas, child_x, child_y, spacing if level > 0 else x_spacing, y_spacing, level + 1)
-
+        for child_x, child_node in zip(child_positions, node.children):
+            child_y = y + y_spacing
+            canvas.create_line(x, y + node_radius, child_x, child_y - node_radius, fill="blue")
+            draw_tree(child_node, canvas, child_x, child_y, x_spacing, y_spacing, level + 1, level_offset)
 
 def display_tree_in_window(expression):
     try:
@@ -110,23 +114,23 @@ def display_tree_in_window(expression):
         root_node = Node("Root", 'Operation')
         build_tree(tree, root_node)
 
-        tree_width, tree_height = calculate_tree_size(root_node, x_spacing=250, y_spacing=120)  # Incremento del espacio entre nodos
+        tree_width, tree_height = calculate_tree_size(root_node, x_spacing=250, y_spacing=120)
 
         new_window = tk.Toplevel()
         new_window.title("Árbol Sintáctico")
 
-        # Ajuste del tamaño del canvas y del espacio interno
         canvas_width = tree_width * 250 + 100
         canvas_height = tree_height * 120 + 100
-        canvas = tk.Canvas(new_window, width=canvas_width, height=canvas_height, bg="white")  # Fondo blanco con espacio interno
+        canvas = tk.Canvas(new_window, width=canvas_width, height=canvas_height, bg="white")
         canvas.pack()
 
-        draw_tree(root_node, canvas, x=canvas_width // 2, y=60, x_spacing=250, y_spacing=120)
+        draw_tree(root_node, canvas, x=canvas_width // 4 , y=45, x_spacing=175, y_spacing=120)
 
     except ValueError as ve:
         print(ve)
     except Exception as e:
         print(f"Error inesperado: {e}")
+
 
 root = tk.Tk()
 root.title("Visualizador de Árbol Sintáctico")
@@ -137,7 +141,7 @@ label.pack()
 entry = tk.Entry(root)
 entry.pack()
 
-canvas = tk.Canvas(root, bg="white")  # Fondo blanco para el lienzo
+canvas = tk.Canvas(root, bg="white")
 canvas.pack(fill=tk.BOTH, expand=True)
 
 button = tk.Button(root, text="Mostrar Árbol", command=lambda: display_tree_in_window(entry.get()))
