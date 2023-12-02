@@ -108,7 +108,8 @@ def draw_tree(node, canvas, x, y, x_spacing, y_spacing, level=0, level_offset=0)
             canvas.create_line(x, y + node_radius, child_x, child_y - node_radius, fill="blue")
             draw_tree(child_node, canvas, child_x, child_y, x_spacing, y_spacing, level + 1, level_offset)
 
-def display_tree_in_window(expression):
+def display_tree():
+    expression = entry.get()
     try:
         tree = build_ast(expression)
         root_node = Node("Root", 'Operation')
@@ -116,24 +117,21 @@ def display_tree_in_window(expression):
 
         tree_width, tree_height = calculate_tree_size(root_node, x_spacing=250, y_spacing=120)
 
-        new_window = tk.Toplevel()
-        new_window.title("Árbol Sintáctico")
-
-        canvas_width = tree_width * 250 + 100
-        canvas_height = tree_height * 120 + 100
-        canvas = tk.Canvas(new_window, width=canvas_width, height=canvas_height, bg="white")
-        canvas.pack()
-
-        draw_tree(root_node, canvas, x=canvas_width // 4 , y=45, x_spacing=175, y_spacing=120)
+        canvas.delete("all")  # Limpiar el lienzo antes de redibujar
+        canvas.config(width=tree_width * 250 + 100, height=tree_height * 120 + 100)  # Ajustar tamaño del lienzo
+        draw_tree(root_node, canvas, x=canvas.winfo_width() // 4, y=45, x_spacing=175, y_spacing=120)
 
     except ValueError as ve:
         print(ve)
     except Exception as e:
         print(f"Error inesperado: {e}")
 
+def clear_tree():
+    canvas.delete("all")  # Borrar el lienzo
 
 root = tk.Tk()
 root.title("Visualizador de Árbol Sintáctico")
+root.geometry("800x600")  # Ajustar tamaño de la ventana principal
 
 label = tk.Label(root, text="Ingresa una expresión matemática:")
 label.pack()
@@ -141,10 +139,13 @@ label.pack()
 entry = tk.Entry(root)
 entry.pack()
 
+button_show = tk.Button(root, text="Mostrar Árbol", command=display_tree)
+button_show.pack()
+
+button_clear = tk.Button(root, text="Borrar Árbol", command=clear_tree)
+button_clear.pack()
+
 canvas = tk.Canvas(root, bg="white")
 canvas.pack(fill=tk.BOTH, expand=True)
-
-button = tk.Button(root, text="Mostrar Árbol", command=lambda: display_tree_in_window(entry.get()))
-button.pack()
 
 root.mainloop()
