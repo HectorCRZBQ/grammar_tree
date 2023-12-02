@@ -1,6 +1,8 @@
 import tkinter as tk
 from lark import Lark
 
+#Gramatica
+
 GRAMMAR = '''
     ?start: expr
     ?expr: NUMBER -> number
@@ -18,17 +20,22 @@ GRAMMAR = '''
 
 PARSER = Lark(GRAMMAR, parser='lalr')
 
+#Definimos la clase nodo y sus atributos
 class Node:
     def __init__(self, value, data_type):
         self.value = value
         self.data_type = data_type
         self.children = []
 
+#Cosntruir el Arbol de Sitaxis Abstracta (AST)
+
 def build_ast(expression):
     try:
         return PARSER.parse(expression)
     except Exception as e:
         raise ValueError(f"Error al analizar la expresión: {e}")
+
+#Calcular la distribución horizontal de los nodos
 
 def calculate_horizontal_positions(node, x_spacing):
     if not node.children:
@@ -49,6 +56,8 @@ def calculate_horizontal_positions(node, x_spacing):
         child_positions_result.append(position - size // 2)
 
     return child_positions_result, max(position - x_spacing, max_subtree_size + x_spacing)
+
+# Construcción del arbol (nodos padres, nodos hijos y nodos hoja)
 
 def build_tree(tree, parent_node):
     if isinstance(tree, tuple):
@@ -79,6 +88,8 @@ def build_tree(tree, parent_node):
         node = Node(str(tree), 'Number')
         parent_node.children.append(node)
 
+#Calcula el tamaño del arbol
+
 def calculate_tree_size(node, x_spacing, y_spacing):
     if not node.children:
         return 1, 1
@@ -90,6 +101,8 @@ def calculate_tree_size(node, x_spacing, y_spacing):
         height *= 5
 
     return width, height
+
+#Dibuja el arbol
 
 def draw_tree(node, canvas, x, y, x_spacing, y_spacing, level=0, level_offset=0):
     text_size = 12
@@ -110,6 +123,8 @@ def draw_tree(node, canvas, x, y, x_spacing, y_spacing, level=0, level_offset=0)
             canvas.create_line(x, y + node_radius, child_x, child_y - node_radius, fill="blue")
             draw_tree(child_node, canvas, child_x, child_y, x_spacing, y_spacing, level + 1, level_offset)
 
+#Mostrar el arbol
+
 def display_tree():
     expression = entry.get()
     try:
@@ -128,9 +143,12 @@ def display_tree():
     except Exception as e:
         print(f"Error inesperado: {e}")
 
+#Limpiar el arbol
+
 def clear_tree():
     canvas.delete("all")  # Borrar el lienzo
 
+#Ventana
 root = tk.Tk()
 root.title("Visualizador de Árbol Sintáctico")
 root.geometry("800x600")  # Ajustar tamaño de la ventana principal
@@ -142,6 +160,7 @@ label.pack()
 entry = tk.Entry(root, font=("Arial", 12))
 entry.pack()
 
+# Botones 
 button_show = tk.Button(root, text="Mostrar Árbol", command=display_tree, font=("Arial", 12), bg="#4CAF50", fg="white")
 button_show.pack()
 
