@@ -36,3 +36,6 @@ The application allows users to input simple mathematical expressions and visual
 ![Test_4](Test_4.png)
 ## Ejemplo v5 / Example v5
 ![Test_5](Test_5.png)
+
+
+Autores: [HectorCRZBQ](https://github.com/HectorCRZBQ) y  [XxIMDARIOxX](https://github.com/XxIMDARIOxX)
