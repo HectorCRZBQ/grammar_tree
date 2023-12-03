@@ -1,6 +1,9 @@
-# Árbol Sintáctico en Tkinter
+# Árbol sintáctico abstracto con Lark y Tkinter / AST with Lark and Tkinter
+(ESP)
+Este proyecto muestra una representación gráfica (Tkinter) de un árbol sintáctico abstracto generado a partir de expresiones matemáticas definidas en la gramatica (Lark).
 
-Este proyecto muestra una representación gráfica de un árbol sintáctico generado a partir de expresiones matemáticas utilizando Tkinter y Lark.
+(ENG)
+This project shows a graphic representation (Tkinter) of a AST generated using the mathematic expresions defined on the grammar (Lark).
 
 ## Descripción / Description
 (ESP)
@@ -12,9 +15,10 @@ The application allows users to input simple mathematical expressions and visual
 ## Cómo usar / How to use
 (ESP)
 1. Clona o descarga este repositorio.
-2. Asegúrate de tener instalados Python y las siguientes librerías: `tkinter`, `lark-parser`.
-3. Ejecuta el script `tree_visualizer.py`.
-4. Ingresa una expresión matemática en la ventana y haz clic en "Mostrar Árbol" para visualizar el árbol sintáctico.
+2. Asegúrate de tener instalados Python y las siguientes librerías: [tkinter](https://docs.python.org/es/3/library/tkinter.html),
+   [lark-parser](https://github.com/lark-parser/lark).
+4. Ejecuta el script `tree_visualizer.py`.
+5. Ingresa una expresión matemática en la ventana y haz clic en "Mostrar Árbol" para visualizar el árbol sintáctico.
 
 (ENG)
 1. Clone or download this repository.
